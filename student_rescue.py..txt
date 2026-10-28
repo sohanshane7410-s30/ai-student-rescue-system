@@ -1,0 +1,215 @@
+# Online Python compiler (interpreter)
+# Write and run Python online using this editor.
+
+import pandas as pd
+
+# AI Student Rescue System
+students = pd.DataFrame({
+    "Student": ["Sophia", "Maya", "Noah", "Alex", "Liam"],
+    "Previous_Mastery": [30, 45, 60, 70, 85],
+    "Current_Mastery": [50, 55, 58, 78, 92]
+})
+
+# Calculate mastery gaps and progress
+TARGET = 80
+
+students["Progress"] = (
+    students["Current_Mastery"] - students["Previous_Mastery"]
+)
+
+students["Gap_To_Target"] = (
+    TARGET - students["Current_Mastery"]
+).clip(lower=0)
+
+students["Priority"] = students["Current_Mastery"].apply(
+    lambda score: (
+        "Urgent Support" if score < 40
+        else "High Priority" if score < 60
+        else "Monitor Progress" if score < 80
+        else "Target Achieved"
+    )
+)
+
+print("AI STUDENT RESCUE SYSTEM")
+print("=" * 45)
+print(students.to_string(index=False))
+
+print("\nStudents needing support:", 
+      (students["Current_Mastery"] < TARGET).sum())
+
+print("Average mastery:", 
+      round(students["Current_Mastery"].mean(), 1), "%")
+
+# Identify the student needing the most urgent support
+
+lowest_student = students.loc[
+    students["Current_Mastery"].idxmin()
+]
+
+print("\n🚨 STUDENT RESCUE ALERT")
+print("-" * 35)
+print("Student:", lowest_student["Student"])
+print("Current mastery:", str(lowest_student["Current_Mastery"]) + "%")
+print("Gap to 80% target:", str(lowest_student["Gap_To_Target"]) + " percentage points")
+print("Recommended action: Individual coaching and targeted practice")
+
+# Automatic Student Risk Detection
+
+def assess_risk(score):
+    if score < 40:
+        return "CRITICAL"
+    elif score < 60:
+        return "HIGH"
+    elif score < 80:
+        return "MONITOR"
+    else:
+        return "ON TRACK"
+
+students["Risk_Level"] = students["Current_Mastery"].apply(assess_risk)
+
+print("\nSTUDENT RISK REPORT")
+print("=" * 45)
+print(students[["Student", "Current_Mastery", "Risk_Level"]].to_string(index=False))
+
+print("\nStudents requiring support:")
+print(students[students["Current_Mastery"] < 80]["Student"].to_string(index=False))
+
+# STEP 7: Intervention Effectiveness Tracker
+
+students["Intervention"] = [
+    "Targeted fraction practice",
+    "Guided practice",
+    "Small-group review",
+    "Extra challenge problems",
+    "Advanced enrichment"
+]
+
+students["Follow_Up_Mastery"] = [65, 68, 70, 84, 95]
+
+students["Improvement_After_Support"] = (
+    students["Follow_Up_Mastery"]
+    - students["Current_Mastery"]
+)
+
+print("\nINTERVENTION EFFECTIVENESS REPORT")
+print("=" * 65)
+
+print(
+    students[
+        [
+            "Student",
+            "Current_Mastery",
+            "Follow_Up_Mastery",
+            "Improvement_After_Support"
+        ]
+    ].to_string(index=False)
+)
+
+print("\nAVERAGE IMPROVEMENT:")
+print(
+    round(students["Improvement_After_Support"].mean(), 1),
+    "percentage points"
+)
+
+print("\nSTUDENTS WHO REACHED 80% MASTERY:")
+print(
+    students[students["Follow_Up_Mastery"] >= 80]["Student"]
+    .to_string(index=False)
+)
+
+
+# STEP 8: Student Rescue Priority Queue
+
+TARGET_MASTERY = 80
+
+def calculate_priority(row):
+    score = row["Current_Mastery"]
+    previous = row["Previous_Mastery"]
+
+    if score < 40:
+        return "P1 - URGENT"
+    elif score < 60:
+        return "P2 - HIGH"
+    elif score < TARGET_MASTERY and score <= previous:
+        return "P2 - CHECK PROGRESS"
+    elif score < TARGET_MASTERY:
+        return "P3 - MONITOR"
+    else:
+        return "ON TRACK"
+
+students["Rescue_Priority"] = students.apply(
+    calculate_priority, axis=1
+)
+
+priority_order = {
+    "P1 - URGENT": 1,
+    "P2 - HIGH": 2,
+    "P2 - CHECK PROGRESS": 2,
+    "P3 - MONITOR": 3,
+    "ON TRACK": 4
+}
+
+students["Priority_Order"] = (
+    students["Rescue_Priority"].map(priority_order)
+)
+
+rescue_queue = students.sort_values(
+    by=["Priority_Order", "Current_Mastery"],
+    ascending=[True, True]
+)
+
+print("\nSTUDENT RESCUE PRIORITY QUEUE")
+print("=" * 60)
+
+print(
+    rescue_queue[
+        ["Student", "Current_Mastery", "Progress", "Rescue_Priority"]
+    ].to_string(index=False)
+)
+
+print("\nFIRST STUDENT TO REVIEW:")
+print(rescue_queue.iloc[0]["Student"])
+
+
+
+# STEP 9: Personalized Intervention Planner
+
+
+def recommend_intervention(row):
+    score = row["Current_Mastery"]
+    progress = row["Progress"]
+
+    if progress < 0:
+        return "Diagnostic review + investigate declining mastery"
+    elif score < 40:
+        return "Urgent 1:1 coaching + foundational skill review"
+    elif score < 60:
+        return "Targeted practice + misconception check"
+    elif score < 80 and progress == 0:
+        return "Diagnostic assessment + review stalled progress"
+    elif score < 80:
+        return "Focused practice + follow-up mastery check"
+    else:
+        return "Advanced challenge + enrichment activities"
+
+students["Recommended_Action"] = students.apply(
+    recommend_intervention, axis=1
+)
+
+print("\nPERSONALIZED INTERVENTION PLANS")
+print("=" * 75)
+
+print(
+    students[
+        [
+            "Student",
+            "Current_Mastery",
+            "Progress",
+            "Recommended_Action"
+        ]
+    ].to_string(index=False)
+)
+
+
+
+
