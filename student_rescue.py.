@@ -4,11 +4,7 @@
 import pandas as pd
 
 # AI Student Rescue System
-students = pd.DataFrame({
-    "Student": ["Sophia", "Maya", "Noah", "Alex", "Liam"],
-    "Previous_Mastery": [30, 45, 60, 70, 85],
-    "Current_Mastery": [50, 55, 58, 78, 92]
-})
+students = pd.read_csv("student_data.csv")
 
 # Calculate mastery gaps and progress
 TARGET = 80
